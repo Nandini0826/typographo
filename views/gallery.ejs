@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <meta name="p:domain_verify" content="26e2147194ef59174d3e2cf2c0afc487" />
+    <script async defer src="https://assets.pinterest.com/js/pinit.js"></script> 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #e60023;
+            
+        }
+        .pinterest-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 5px;
+        }
+        .pinterest-card {
+            width: 300px;
+            background: white;
+            padding: 5px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+    </style>
+</head>
+  <body>
+    <h1>Holi gallery</h1>
+
+    <div class="pinterest-container">
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/866380047072706899/"></a>
+        </div>
+
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/26177241579240001/"></a>
+        </div>
+
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/866380047072706967/"></a>
+        </div>
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/866380047072706976/"></a>
+        </div>
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/866380047072706824/"></a>
+        </div>
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/866380047072706674/"></a>
+        </div>
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/949133690222493283/"></a>
+        </div>
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/396598310956620256/"></a>
+        </div>
+        <div class="pinterest-card">
+            <a data-pin-do="embedPin" href="https://in.pinterest.com/pin/47076758597416472/"></a>
+        </div>
+    </div>
+    <script>
+        setTimeout(() => {
+            let pins = document.querySelectorAll(".pinterest-card iframe");
+            pins.forEach(pin => {
+                pin.style.width = "280px";  // Adjust width
+                pin.style.height = "auto";  // Maintain aspect ratio
+            });
+        }, 3000); // Wait 3 seconds to let Pinterest load
+    </script>
+    
+    
+</body>
+</html>

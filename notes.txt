@@ -1,0 +1,508 @@
+Install express, mongoose, cookie-parser, bcrypt, jsonwebtoken, ejs 
+
+1. Create a e-commerce website
+
+2. Create a folder "routes" that would comtain the routes
+3. Create a folder "views" that would contain the ejs files
+4. Create a folder "public" that would contain the static files
+    1. Create a folder "images" that would contain the images
+    2. Create a folder "stylesheets" that would contain the css files
+    3. Create a folder "javascripts" that would contain the javascript files
+5. Create a folder "models" which would contain all the database models
+6. Create a folder "config" which would contain all the database configurations
+7. Create a folder "controllers" which contains the methods or functions 
+8. Create a folder "middlewares"
+9. Create a folder "utils" which would contain the utility functions such as JWT functions(generating tokens)
+10. Create a file ".env" which would contain the keys or environment variables
+11. Create a file ".gitignore" would contain the folder we would like git to not track
+
+12. To track the whole project: Every changes will be saved or made checkpoints
+    Initialize git: 
+        -> git init
+    Remove "node_modules" and ".env" from being tracked: write the names in the .gitignore file ans save it
+    Initial setup (first checkpoint):
+        -> git add .
+        -> git commit -m "message we want to provide"
+
+After performing "git init" in the beginning and start monitoring all the folder 
+After "git add" we would find no folders are added or being tracked since the folders are empty.
+And blank folder can not be tracked by default.
+To add or track blank folders we need to create a file ".gitkeep" in all blank folders to monitor or track those folders
+
+13. Add ".gitkeep" files in all empty folders
+14. Once a file is created in a blank folder or the folder is no longer blank remove the ".gitkeep" file from that folder 
+
+Usermodel:
+    full name - string
+    email - string
+    password - string
+    cart - array
+    orders - array
+    contact - number
+    picture - database file
+
+Product: 
+    image - database file
+    name - string
+    price - number
+    discount - number, default = 0
+    bgcolor - string
+    panelcolor - string
+    textcolor - string
+
+Owner:
+    fullName- string
+    email- string
+    password- string
+    products- array
+    picture- string
+    gstin- string
+
+15. Set up mongoose connection (connecting to database) based on separation of concerns (externally)
+    1. Create a file "mongoose-connection.js" inside "config" folder
+    2. Require mongoose
+    3. Connect the database
+    4. Use then and catch functions to catch error and check if database is connected successfully
+        then: to check if connected successfully
+        catch: to catch an error
+        both takes a function as a parameter
+        In catch the parameter function takes error as a parameter
+    5. Export the whole control of the database by exporting "mongoose.connection"
+    6. Require the exported control of the database in the main js file (app.js), it is not required to require the connections in the model files
+ 
+16. Create User-model
+    1. Create a js file "user-model.js" under the folder "models"
+    2. Require mongoose
+    3. No need to connect the database as it already done externally in a config file
+    4. Create the schema
+    5. Create and export the user model
+
+17. Create Product-model
+    1. Create a file "product-model" under the folder "models"
+    2. Require mongoose
+    3. No need to connect the database as it already done externally in a config file
+    4. Create the schema
+    5. Create and export the product model
+
+18. Create a Owner-model
+    1. Create a file "owner-model" under the folder "models"
+    2. Require mongoose
+    3. No need to connect the database as it already done externally in a config file
+    4. Create the schema
+    5. Create and export the owner model
+
+19. Setting up routers for differenct request:
+    A. For owner related requests:
+        1. Create a js file "ownersRouter.js" inside "routes" folder
+        2. Require express
+        3. Require "express.Router()" function and store in a variable "router"
+        4. Export the router
+        5. Require the exported router in main js file (app.js) and store in a variable "ownersRouter"
+        6. Create a middleware that all '/owner' requests should be sent to "ownersRouter"
+    B. For user related requests:
+        1. Create a js file (usersRouter.js) inside "routes" folder
+        2. Require express
+        3. Require "express.Router()" function and store in a variable "router"
+        4. Export the router
+        5. Require the exported router in main js file (app.js) and store in a variable "usersRouter"
+        6. Create a middleware that all '/user' requests should be sent to "usersRouter"
+    C. For product related requests:
+        1. Create a js file (productsRouter.js) inside "routes" folder
+        2. Require express
+        3. Require "express.Router()" function and store in a variable "router"
+        4. Export the router 
+        5. Require the exported router in main js file (app.js) and store in a variable "productsRouter"
+        6. Create a middleware that all '/product' requests should be sent to "productsRouter"
+    D. For index page related requests:
+        1. Create a js file (index.js) inside "routes" folder
+        2. Require express
+        3. Require "express.Router()" function and store in a variable "router"
+        4. Create routes
+        5. Export the router
+        6. Require the exported router in main js file (app.js) and store in a variable "indexRouter"
+
+20. How to store key (mongodb url):
+    1. Install debugger: npm i debug
+    2. Require debugger inside the "mongoose-connection" file: require("debug")
+    3. Calling debugger function just after requiring:
+        Syntax: const dbgr = require("debug") (namespace)
+        namespace: namespace with which we want to create it 
+        -> statusOrPhaseOfTheServer: fileFromWhereTheMessageIsFrom // both are just variables we can keep any name
+        
+        const dbgr = require('debug')("development:mongoose")
+        Here "development" is the status or phase of the server and the message wiil be from mongoose's "connection" file
+    4. Replace the console.log with the variable ("dbgr") where the debugger package is required and stored and called 
+        This won't print the messages by default unless the enviroment variables are set up
+    5. Setup enviroment variables:
+        In Terminal
+           -> set DEBUG=development:*  // this means an enviroment variable "DEBUG" is set with value "development:*"
+                                       // this will show messages of all namespaces with "development:" or namespaces related to "development, here * refers to all
+            The messages are printed as long as the "DEBUG" value is running
+            To not print the message set the DEBUG value to blank
+            -> set DEBUG=
+    6. Create a json file "development.json" inside "config" folder
+        Name of the json file should be same as the namespace used in setting environment variable
+    7. Inside it inside a object create a property "MONGODB_URI" and store the url (except the database name) used in "mongoose.connect" while connecting to the database
+        {
+            "MONGODB_URI" : "mongodb://127.0.0.1:17017"   
+        }
+    8. Install config : npm i config
+    9. Require config in the "mongoose-connection" file
+        -> require('config');
+    10. Use the config to fetch the mongodb url in "development.json"
+        -> config.get(property);  
+        property: the key of the object created in "development.json" which contains the mongodb url
+        config.get(): It checks the current process's environment or current evironment. If it is development then it would fetch data from "development.json",
+        if it is in production it would fetch data from "production.json". It works on the basis of the value of environment variable "DEBUG".
+
+21. Create Owner:
+    1. Require "ownerModel" from "owner-model.js" file 
+    2. Create a post request in '/create' route
+    3. Set a new environment variable "NODE_ENV"
+        In terminal
+        -> set NODE_ENV = development
+    4. Access the environment variable
+        -> process.env.Environment_Variable_Name;
+
+        process.env.NODE_ENV; Here "NODE_ENV" is the environment variable
+    5. We want the '/create' route to be inside "development" environment. Thus this route is only available when the environment is in "development"
+    6. Use if else to check if the enviroment is in development stage
+        if yes then allow the /create route for post request
+    7. Check if the owner is already present using mongoose find function
+        if yes then return status(504)
+        else create owner using the req.body contents and mongoose create function and send status(201)
+    8. Apply seperation of concerns:
+        1. Create a file "ownerAuthController.js" in "controller" folder
+            1. Require JWT
+            2. Require bcrypt
+            3. Require onwerModel from "models" folder
+            4. Require exported "generateToken" function from "generateToken.js" from "utils" folder
+            5. Cut the function of the '/create' post route and paste it in "ownerAuthController.js" file 
+            6. Export the above pasted function as field "registerOwner"
+        2. Require the above exported function in "ownersRouter.js" file inside "routes" folder using destructuring
+        3. Use the above required function as the function of the '/create' post route
+/ -> signup or login
+/shop ->  shop
+/users/cart -> user's cart
+/admin -> admin panel
+/owner/products -> show all products
+/owner/admin -> show admin panel to create products   
+
+22. Register a user:
+    1. Creating '/register' route for post request in user router:
+        1. Require 'userModel' from 'user-model.js' file
+        2. Create a post request in '/register' route
+        3. Destructure the required variables form the req.body
+        4. Check if the user is already register:
+            1. Find the user using findOne function of mongoose, using email as a parameter and store it in a variable "foundedUser"
+            2. Use if to check if "foundedUser" contains a value or not
+                1. If yes return status(401) and display message
+                // or flash message and redirect to the desired route '/'
+        5. Hashing the password:
+            1. Require 'bcrypt'
+            2. Use bcrypt to generate a hash
+            3. Use if to check if there is an error
+                if yes display the error message
+                else create a user
+        6. Create a user using the mongodb 'create' function
+        7. Set up cookies
+            1. Generate token:
+                1. Require dotenv inside "app.js" file and call it instantly: require('dotenv').config(); // all variable inside .env file would be in use
+                2. Create a js file "keys.js" inside config folder
+                3. Inside it create a property "JWT_KEY" in an object and initialize it with "process.env.JWT_KEY" // optional
+                4. Inside .env file declare a variable "JWT_KEY" and initialize it with the secretKey for creating JWT tokens
+                5. Create a js file "generateToken.js" inside "utils" folder
+                6. Require 'jsonwebtoken'
+                7. Create a arrow function "generateToken" which accepts "user" as its parameter;
+                    1. It generates token using jwt.sign() and returns it
+                    2. The jwt.sign() accepts parameters like the properties used to create the token and the secretKey which can be accessed from .env file using process.env.Key_Name
+                        -> process.env.JWT_KEY;
+            2. Export "generateToken"
+            3. Require the "generateToken" function exported from the "utils" folder, in the "userRouter.js" file;
+            4. Call the "generateToken" function and passing "createdUser" into it and store it in a variable "token"
+            5. Set the variable "token" as cookie;
+        8. Use error handling
+                1. Put all the code of the function of the '/register' route inside try{} to execute the codes and look for error
+                2. Use catch(err) {} to fetch error and display error
+                3. The try{} and catch(err) {} should be inside the function of the '/register' route
+        9. Converting it based on seperation of concerns
+            1. Create a js file "authController.js" inside "controllers" folder
+            2. Require "userModel" from "models" folder
+            3. Require "bcrypt"
+            4. Require "generateToken" function exported from "utils" folder
+            5. Cut the function of '/register' post route of "userRouter.js" and paste in the above file
+            6. Export the above function as a property (registerUser) of an object:
+                Syntax: module.exports.propertyName = value
+                -> module.exports.registerUser = //code
+            7. Require the above exported function in the "usersRouter.js" file by destructuring
+            8. Apply the above required function as the function of the '/register' post route in the "userRouter.js"
+
+23. Login a user:
+    1. Create a function for logging in a user inside "authController.js" file inside "controller" folder
+        1. destructuring and fetching email and password from request body
+        2. Find the user using the findOne function of mongoose and store it in a variable "foundedUser"
+        3. Check if the "foundedUser" variable is empty or not
+            If empty create a flash message and redirect to the desired route '/'
+        4. Use bcrypt compare to validate the password
+            If yes generate token and send the token as cookie to the browser and redirect to '/shop' route
+            If no create flash message and redirect to desired route '/'
+    2. Export the above function as a property (loginUser) of an object
+    3. Require the above exported function in the "usersRouter.js" file by destructuring
+    4. Create a '/login' post route in "userRouter.js" file
+        1. Apply the above required function as the function of the '/login' post route
+
+Use flash Message to display messages from backend in ejs or html files. It is only required when we are using ejs or html, not required when we are building just the api   .
+If we create a flash message in one route then redirect to another route, the flash message can be accessed in the redirected route too.
+Flash messages use sessions. Sessions can be setup using express-sessions or anything that helps create sessions
+
+24. Set up flash message and session:
+    1. Install express-session: install i express-session
+    2. Install connect-flash: install i connect-flash
+    3. Require express-session in main js file (app.js);
+    4. Require connect-flash in main js file (app.js);
+    5. Add a middleware of express-session in main js file (app.js) with properties like resave, saveUninitialized, secret
+        1. Declare a enviroment variable "EXPRESS_SESSION_SECRET" and initialize it with a value in .env file
+        2. Initialize the secret field of express-session middleware with the above created enviroment variable
+        -> secret: process.env.EXPRESS_SESSION_SECRET;
+    6. Add a middleware of connect-flash in main js file (app.js)
+    7. Displaying flash message in ejs file:
+        1. Creating a flash message:
+            Syntax: req.flash( messageName, message);
+            -> req.flash("error", "there is an error");
+        2. Redirect to the required route where the flash message is to be displayed: 
+            Syntax: req.redirect(route);
+            -> req.redirect('/');
+        3. Access the flash message in the redirected route:
+            Syntax: req.flash(messageName);
+            -> req.flash("error");
+        4. Store the message in a variable:
+            Syntax: let variableName = req.flash(messageName);
+            -> let error = req.flash("error");
+        5. Send the variable with the message to the ejs file while rendering
+            Syntax: res.render(ejsFile, {property: value});
+            -> res.render("index", {error: error});
+
+25. Create isLoggedIn middleware:
+    1. Create a js file "isLoggedIn" inside "middleware" folder
+    2. Require jwt in the above file
+    3. Require userModel in the above file
+    4. Create the isLoggedIn middleware function
+        1. Check if the request cookie's token value is empty or not
+            If empty create a flash message and redirect to '/' route
+        2. Decode the the token using jwt.verify() to return the properties used to create the token
+        3. Store the decoded properties in a variable "decoded"
+        4. Find the user using findOne function of mongoose using the decoded properties 
+        5. Store the above returned user in a variable "user" and exclude the password field using select() function
+        6. Create a "user" field in request and initialize it with the variable "user" which contains the returned user
+        7. Move to next using next() function
+        8. Use try and catch(err) for error handling
+            1. Keep the above code inside try
+            2. Inside catch(err) create a flash message with the name of the flash message
+            3. Redirect to the desired route '/' where the flash message is to be accessed
+
+26. Create a shopping panel:
+    1. Require exported function from "isLoggedIn.js" file of "middleware" folder inside "index.js" file of "router" folder
+    2. Create a get route '/shop' in "index.js" file inside "router" folder
+        1. Use isLoggedIn as middleware function
+        2. Render "shop" file
+
+27. Displaying flash messages in '/' route
+    1. Access the flash messages using the messageName
+    2. Render the "index" file, send the flash message to the rendered ejs file
+
+28. Logout User
+    1. Create a logout function in the "authController.js" file in "controller" folder
+        1. Set the request cookie "token" value as empty
+        2. Redirect to '/' route
+    3. Export the above function as a property or field (logout) of an object
+    4. Require the above exported function in "userRouter.js" file by destructuring
+    5. Create a '/logout' get route in the above file
+        1. Apply the above required function as the function of this route
+
+29. Create products:
+    1. Create a admin panel for owners to create products:
+        1. Require "ownerIsLoggedIn" in the "ownersRouter.js"
+        2. Create a '/admin' get route in "ownersRouter.js"
+            1. Pass "ownerIsLoggedIn" as a middleware  (refer to section 34)
+            2. Render "createproducts" ejs file
+    2. Fetching product details and creating products:
+        1. In "createproduct.ejs", in the form tag
+            1. Add action attribute with value "/product/create"
+            2. Add method attribute with value "post"
+        2. Setup multer:
+            1. Install multer
+            2. Add enctype attribute with value "multipart/form-data" in the above form tag of the above ejs file
+            3. Change the type for "name" field in "product-model.js" from String to Buffer
+            4. Create a js file "multer-config" inside "config" folder
+            5. Require multer inside the above file
+            6. Create a memory storage for multer:
+                -> const storage = multer.memoryStorage();
+            7. Telling multer the destination to store the image file by default
+                -> const upload = multer({storage: storage}); 
+                here multer is told to store the image file in "storage" which contains the created memory Storage
+            8. Export the "upload" variable which contains the called multer
+                -> module.exports = upload;
+            9. Require the exported "upload" variable in the "productRouter.js" file
+        3. Create a '/create' post route in "productRouter.js":
+            1. Require "ownerIsLoggedIn" in the "productRouter.js"
+            2. apply middleware "ownerIsLoggedIn" (refer to section 34)
+            3. call the required multer variable:
+                -> upload.single('image'); 
+                here "image" is the value of the "name" attribute of the input tag for image file
+                this mean to take data from the input element with name "image"
+                this variable is to be placed as a parameter in the created post route
+            4. Require the productModel inside the above file 
+            5. Store the form data inside product-model using "create()" function of mongoose:
+                1. Destructure req.body 
+                2. "image" field should be initialized with the "buffer" field of "req.file"
+                3. Initialize all the remaining product-model fields with the fields destructured from req.body
+            6. Add the created product to the owner's database
+                1. Find the owner using "email" field of the "req.owner"
+                2. Push the created product id in the "product" field of the founded owner
+                3. Save the changes
+            7. Apply error handling:
+                Use try and catch(err) to apply error handling
+            8. Apply flash messages:
+                1. Create and send flash message for successful creation of product
+                2. Redirect to '/owner/admin' route
+                3. Access the flash message for successful creation of product in the '/admin' route of the 'owndersRouter.js'
+                4. Render the "createproducts" ejs file and send the flash message along with it
+                5. Access the flash message in the above ejs file and display it 
+
+30. Display all the created products for the users:
+    1. Require the 'productModel" in the "index.js" file in "routes" folder
+    2. In the '/shop' route in "index.js" file find all the products using find() function of mongoose
+    3. Send all the products along with rendering "shop" ejs 
+    4. Display the images of the products in ejs file
+        1. Initialize the src attribute of img tag with
+            -> data:image/jpeg;base64,<%= product.image.toString('base64') %>
+    5. Use the input data to set css
+        -> bg-[<%=product.panelcolor %>]
+        -> text-[<%=product.textcolor %>]
+        -> bg-[<$=product.bgcolor %>]
+    6. Display the necessary details of the products
+        -> <%=product.name%>
+        -> <%=product.price%>
+
+31. Display fields in headers of '/shop' route and other routes except for the '/' route
+    1. In the routes which renders the required ejs files
+       send a field "isLoggedIn" to the rendering ejs file and set its value as "false"
+       for only those routes which does not require the header and 
+       for others which does require the header contents nothing is to be mentioned while rendering
+    2. Create variable "isLoggedIn" in the "header.ejs" file whose value would be
+        1. true if the "isLoggedIn" field sent by the route to the rendering ejs file is undefined
+        2. same as the value of "isloggedIn" field sent by the route to the rendering ejs file
+    3. Use if to check if the "isloggedIn" variable of the "header.ejs" file is true or not
+        if true display the header contents like shop, cart, myAccount, Logout
+    
+    The above step means in routes if the field "isLoggedIn" is set as false and sent to the rendering ejs file
+    The variable "isLoggedIn" in the "header.ejs" file would have the value same as the field "isLoggedIn" which is false
+    and thus would not display the header contents and for those routes where the "isLoggedIn" field in not sent to the rendering ejs file
+    the "isLoggedIn" variable of "header.ejs" would have undefined value thus its value would be set to true which would satisfy
+    the next if condition and display the header contents. 
+    Since all ejs files includes the 'header.ejs' file and some routes does not require the ejs file to display the header content
+    only for those routes the "isloggedIn" field is going to be set to false and sent along to the rendering ejs file
+    and for the remaining no "isloggedIn" field is going to be sent to the rendering ejs file  
+
+32. Show cart:
+    1. Create a route for cart
+        1. Create a '/cart' get route in "index.js" file "routes" folder
+            1. Add "isLoggedIn" as its middleware function
+            2. Find the user using the "email" field in "req.user" and populate the 'cart' field of the found user
+            3. Render ejs file 'cart' and send the founded user to the ejs file
+        2. Display the products in cart
+            1. Run a forEach loop over the "cart" field of the sent "user" in the "cart.ejs' file
+            2. Display the desired details of the product
+                1. Display the image from the "image" field of the populated products present in the "cart" field of the sent "user"
+                2. Apply the background in css from the "bgcolor" field of the populated products present in the "cart" field of the sent "user"
+                3. Apply the panel color in css from the "panelcolor" field of the populated products present in the "cart" field of the sent "user"
+                4. Apply the text color in css from the "textcolor" field of the populated products present in the "cart" field of the sent "user"
+                5. Display the product name from the "name" field of the populated products present in the "cart" field of the sent "user"
+                6. Display the product price from the "price" field of the populated products present in the "cart" field of the sent "user"
+                7. Display the product discount from the "discount" field of the populated products present in the "cart" field of the sent "user"
+                8. Display the product discount from the "discount" field of the populated products present in the "cart" field of the sent "user"
+                9. Calculate and display the Total Amount (product.price - product.discount + 20)
+    2. Add elements to cart
+        1. In the "shop.ejs" file add '/addtocart/<%=product._id%>' route in the "href" attribute of the add icon
+        2. Create a '/addtocart/:id' get route in "index.ejs" file in "routes" folder
+            1. Pass "isLoggedIn" as a middleware to fetch the logged in user's data from the cookies
+            2. Find the user using the "email" field of the "req.user" 
+            3. Fetch the product id using "req.params.id" and push it in the "cart" array field of the found user
+            4. Save the changes
+            5. Send a flash message for successful addition into the cart
+            6. Redirect to the '/shop' route
+            7. Fetch the flash message in the '/shop' route using the name of the flash message
+            8. Send the flash message to the rendering ejs file
+            9. Display the flash message in the rendering ejs file
+
+33. Login Owner:
+    1. Create a '/login' get route in "ownersRouter.js" file inside "routes" folder
+        1. fetch flash message with name "error"
+        2. Render the 'owner-login.ejs' file along with the flash message fetched
+        3. Inside the "owner-login.ejs" file
+            1. Initialize the value of "action" attribute with '/owners/login' route
+            2. Initialize the value of "method" attribute with 'post'
+        4. Display the flash message
+    2. Create a js file "ownerAuthController.js" inside "controller" folder
+        1. Requrire jwt
+        2. Require bcrypt
+        3. Require the ownerModel
+        4. Require the exported "generateToken" function from the "generateToken.js" file inside "utils" folder
+        5. Create a login function:
+           1. Destructure the email, password from the req.body
+           2. Find the owner using the email destructed from req.body
+           3. Validate the email and password:
+                1. Check if the there is any owner with the given email
+                2. If not, send a flash message
+                    1. Create a flash message with the name "error" and send to the '/owner/login' route
+                    2. Redirect to the '/owner/login' route
+                3. If yes validate the password
+                    1. Use bcrypt.compare to validate the given password and the password of the founded owner and generate a result
+                    2. If the result is true:
+                        1. Generate token using the generateToken() function and pass the foundedOwner as a parameter
+                        2. Set the generated token as cookie
+                        3. Redirect to the '/owner/product' route
+                    3. If the result is false:
+                        1. Create a flash message with the name "error" and send to the '/owner/login' route
+                        2. Redirect to the '/owner/login' route
+                4. Apply error handling:
+                    1. Keep all the above code inside try
+                    2. Use catch(err) function to catch error
+                    3. Inside the catch(err) create a flash message with name "error" and send it to '/owner' route
+        6. Export the above created function under the field "loginUser"
+    3. Require the exported "loginUser" function from the "ownerAuthController.js" file by destructuring
+    4. Create a '/login' post route in "ownersRouter.js" file inside "routes" folder:
+        1. pass the required "loginUser" function as the function of the '/login' post route
+
+34. Create ownerIsLoggedIn middleware:
+    1. Create a js file "ownerIsLoggedIn" inside "middleware" folder
+    2. Require jwt in the above file
+    3. Require ownerModel in the above file
+    4. Create the middleware function
+        1. Check if the request cookie's token value is empty or not
+            If empty create a flash message and redirect to '/owners/login' route
+        2. Decode the the token using jwt.verify() to return the properties used to create the token
+        3. Store the decoded properties in a variable "decoded"
+        4. Find the owner using findOne function of mongoose using the decoded properties 
+        5. Store the above returned owner in a variable "owner" and exclude the password field using select() function
+        6. Create a "owner" field in request and initialize it with the variable "owner" which contains the returned user
+        7. Move to next using next() function
+        8. Use try and catch(err) for error handling
+            1. Keep the above code inside try
+            2. Inside catch(err) create a flash message with the name of the flash message
+            3. Redirect to the desired route '/owners' where the flash message is to be accessed
+
+35. Logout Owner:
+    1. Create a logout function in the "ownerAuthController.js" file in "controller" folder
+        1. Set the request cookie "token" value as empty
+        2. Redirect to '/owners' route
+    2. Export the above function as a property or field (logout) of an object
+    3. Require the above exported function in "ownerRouter.js" file by destructuring
+    4. Create a '/logout' get route in the above file
+        1. Apply the above required function as the function of this route
+
+35. Create Owner or admin panel
+
+36. Show all products of the the owner
+
+37.

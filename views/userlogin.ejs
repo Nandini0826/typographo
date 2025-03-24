@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-100 min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md bg-yellow-200 rounded-lg shadow-lg">
+    <div class="bg-blue-950 px-6 mh-6">
+    <div class="flex">
+      <button id="userTab" class="w-1/2 py-2 bg-blue-950 text-yellow-100 font-bold rounded-tl-lg" onclick="showTab('user')">User</button>
+      <button id="contractorTab" class="w-1/2 py-2 bg-yellow-200 text-blue-950 font-bold rounded-tr-lg" onclick="showTab('contractor')">Contractor</button>
+    </div>
+</div>
+
+    <!-- User Login Form -->
+    <div id="userLogin" class="tab-content p-8">
+      <h2 class="text-2xl text-center mb-4 text-black">Log In</h2>
+      <form action="/users/loginuser" method="POST">
+        <label class="block mb-2 text-black">E mail:</label>
+        <input type="email" name="email" class="w-full mb-4 p-2 bg-blue-100 rounded" required />
+        
+        <label class="block mb-2 text-black">Password:</label>
+        <input type="password" name="password" class="w-full mb-4 p-2 bg-blue-100 rounded" required />
+
+        <button type="submit" class="w-full bg-blue-950 text-yellow-100 py-2 rounded mb-4">Log In</button>
+        <p class="text-center text-black">or</p>
+        <a href="/register" class="block w-full bg-blue-950 text-yellow-100 text-center py-2 rounded mt-2">Sign Up</a>
+      </form>
+    </div>
+
+    <!-- Contractor Login Form -->
+    <div id="contractorLogin" class="hidden p-8">
+      <h2 class="text-2xl text-center mb-4 text-black">Log In as a contractor</h2>
+      <form action="/contractors/logincontractor" method="POST">
+        <label class="block mb-2 text-black">E mail:</label>
+        <input type="email" name="email" class="w-full mb-4 p-2 bg-blue-100 rounded" required />
+        
+        <label class="block mb-2 text-black">Password:</label>
+        <input type="password" name="password" class="w-full mb-4 p-2 bg-blue-100 rounded" required />
+
+        <button type="submit" class="w-full bg-blue-950 text-yellow-100 py-2 rounded mb-4">Log In</button>
+        <p class="text-center text-black">or</p>
+        <a href="/registercontractor" class="block w-full bg-blue-950 text-yellow-100 text-center py-2 rounded mt-2">Sign Up</a>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function showTab(type) {
+      document.getElementById('userLogin').classList.toggle('hidden', type !== 'user');
+      document.getElementById('contractorLogin').classList.toggle('hidden', type !== 'contractor');
+
+      document.getElementById('userTab').classList.toggle('bg-blue-950', type !== 'user');
+      document.getElementById('userTab').classList.toggle('bg-yellow-200', type === 'user');
+      document.getElementById('userTab').classList.toggle('text-yellow-100', type !== 'user');
+      document.getElementById('userTab').classList.toggle('text-blue-950', type === 'user');
+
+      document.getElementById('contractorTab').classList.toggle('bg-blue-950', type !== 'contractor');
+      document.getElementById('contractorTab').classList.toggle('bg-yellow-200', type === 'contractor');
+      document.getElementById('contractorTab').classList.toggle('text-yellow-100', type !== 'contractor');
+      document.getElementById('contractorTab').classList.toggle('text-blue-950', type === 'contractor');
+    }
+  </script>
+</body>
+</html>
